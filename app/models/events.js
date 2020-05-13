@@ -7,11 +7,19 @@ const Schema = new mongoose.Schema({
   Date_debut: String,
   Date_de_fin: String,
   Lieu: String,
-  statut: String,
-  image_event: {
-    type: String,
-    default: 'https://pbs.twimg.com/profile_images/1126137112825335808/L5WvNz8W_400x400.jpg'
-  }
+  prive: {type: Boolean, default: 1},
+  managers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
+  statut: {type: Boolean, default: 1},
+
 }, {
   collection: 'events',
   minimize: false,

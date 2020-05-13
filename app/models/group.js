@@ -4,8 +4,18 @@ const Schema = new mongoose.Schema({
 
   name: String,
   Description: String,
-  Aurorisation_creation: String,
-  Aurorisation_publication: String,
+  Aurorisation_creation: Boolean,
+  Aurorisation_publication: Boolean,
+  managers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }],
   icone_group: {
     type: String,
     default: 'https://pbs.twimg.com/profile_images/1126137112825335808/L5WvNz8W_400x400.jpg'
@@ -13,7 +23,8 @@ const Schema = new mongoose.Schema({
   image_group: {
     type: String,
     default: 'https://pbs.twimg.com/profile_images/1126137112825335808/L5WvNz8W_400x400.jpg'
-  }
+  },
+  statut: Boolean
 }, {
   collection: 'groups',
   minimize: false,

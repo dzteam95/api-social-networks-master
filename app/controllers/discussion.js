@@ -1,30 +1,30 @@
-const GroupModel = require('../models/group.js')
+const DiscussionModel = require('../models/discussion.js')
 
 /**
- * Group
+ * Discu
  * @class
  */
-class Group {
+class Discussion {
   constructor (app, connect) {
     this.app = app
-    this.GroupModel = connect.model('Group', GroupModel)
+    this.DiscussionModel = connect.model('Discussion', DiscussionModel)
 
-    this.createGroup()
-    this.getGroups()
-    this.getGroup()
-    this.updateGroup()
+    this.createDiscu()
+    this.getDiscus()
+    this.getDiscu()
+    this.updateDiscu()
   }
 
   /**
    * Create
    */
-  createGroup () {
-    this.app.post('/groups/create', (req, res) => {
+  createDiscu () {
+    this.app.post('/discus/create', (req, res) => {
       try {
-        const groupModel = this.GroupModel(req.body)
+        const DiscussionModel = this.DiscuModel(req.body)
 
-        groupModel.save().then(group => {
-          res.status(200).json(group || {})
+        DiscussionModel.save().then(discu => {
+          res.status(200).json(discu || {})
         }).catch(err => {
           res.status(500).json({
             code: 500,
@@ -39,20 +39,19 @@ class Group {
       }
     })
   }
-
   /**
-   * Récupérer les données des groupes
-   * @Endpoint : /groups
+   * Récupérer les données des discussions
+   * @Endpoint : /discus
    * @Method : GET
    */
-  getGroups() {
-    this.app.get('/groups', (req, res) => {
+  getDiscus() {
+    this.app.get('/discus', (req, res) => {
         try {
-            this.GroupModel.find({}, function(err, groups) {
+            this.DiscussionModel.find({}, function(err, discus) {
                 res.status(200).json(
                     { 
-                      groups: groups, 
-                        totalGroups: Object.keys(groups).length,
+                      discus: discus, 
+                        totalDiscus: Object.keys(discus).length,
                     }
                 )
             });
@@ -63,18 +62,18 @@ class Group {
     })
   }
   /**
-   * Récupérer les données d'un group
-   * @Endpoint : /groups/{id}
+   * Récupérer les données d'une discusion
+   * @Endpoint : /discus/{id}
    * @Method : GET
    */
-  getGroup() {
-    this.app.get('/groups/:id', (req, res) => {
+  getDiscu() {
+    this.app.get('/discus/:id', (req, res) => {
         try {
-            this.GroupModel.findById(req.params.id).then(group => {
-                if(group){
+            this.DiscussionModel.findById(req.params.id).then(discu => {
+                if(discu){
                     res.status(200).json(
                         { 
-                          group: group, 
+                            discu: discu, 
                         }
                     )
                 }else{
@@ -104,20 +103,20 @@ class Group {
         }
     })
   }
+
   /**
-   * Update les données d'un group
-   * @Endpoint : /groups/{id}/update
+   * Update les données d'une discussion
+   * @Endpoint : /discu/{id}/update
    * @Method : PUT
    */
-
-  updateGroup(){
-    this.app.put('/group/:id/update', (req, res) => {
+  updateDiscu(){
+    this.app.put('/discu/:id/update', (req, res) => {
       try {
-          this.GroupModel.findByIdAndUpdate(req.params.id, req.body).then(group => {
-              if(group){
+          this.DiscussionModel.findByIdAndUpdate(req.params.id, req.body).then(discu => {
+              if(discu){
                   res.status(201).json(
                       { 
-                        group: group, 
+                        discu: discu, 
                       }
                   )
               }else{
@@ -145,6 +144,4 @@ class Group {
       }
   }) 
   }
-
-}
-module.exports = Group
+} module.exports = Discussion
