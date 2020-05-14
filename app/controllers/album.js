@@ -179,6 +179,50 @@ class Album {
     })
 }
 
+ /**
+     * Supprimer un album
+     */
+delete_album() {
+    this.app.delete('/albums/:id/delete', (req, res) => {
+        try {
+            this.AlbumModel.findByIdAndDelete(req.params.id).populate('event_ref').then(album => {
+                
+                if(album){
+                    res.status(200).json(
+                        { 
+                            success: {
+                                status: 200,
+                                message: "successfully deleted",
+                            }
+                        }
+                    )
+                }else{
+                    res.status(400).json(
+                        { 
+                            error: {
+                                status: 400,
+                                message: "invalid id",
+                            } 
+                        }
+                    ) 
+                }
+
+            }).catch(err => {
+                res.status(400).json(
+                    { 
+                        error: {
+                            status: 400,
+                            message: "invalid id",
+                        } 
+                    }
+                ) 
+            });
+        } catch {
+            res.status(500).json({ error: { status: 500, message: "Internal Server Error",} })
+        }
+    })
+}
+
 
   /**
      * Créer une image dans un album
@@ -340,6 +384,48 @@ get_album_pictures_comments() {
             }
         })
     }
+  /**
+     * Supprimer une image d'un album
+     */
+    delete_album_picture() {
+        this.app.delete('/albums/:id/pictures/delete', (req, res) => {
+            try {
+                this.AlbumPicturesModel.findByIdAndDelete(req.params.id).populate('album_ref, author_id').then(picture => {
+                    
+                    if(picture){
+                        res.status(200).json(
+                            { 
+                                success: {
+                                    status: 200,
+                                    message: "successfully deleted",
+                                }
+                            }
+                        )
+                    }else{
+                        res.status(400).json(
+                            { 
+                                error: {
+                                    status: 400,
+                                    message: "invalid id",
+                                } 
+                            }
+                        ) 
+                    }
 
+                }).catch(err => {
+                    res.status(400).json(
+                        { 
+                            error: {
+                                status: 400,
+                                message: "invalid id",
+                            } 
+                        }
+                    ) 
+                });
+            } catch {
+                res.status(500).json({ error: { status: 500, message: "Internal Server Error",} })
+            }
+        })
+    }
 
 } module.exports = Album
