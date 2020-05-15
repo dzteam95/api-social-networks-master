@@ -4,7 +4,7 @@ const UserModel = require('../models/user.js')
  * User
  * @class
  */
-class User {
+module.exports = class User {
   constructor (app, connect) {
     this.app = app
     this.UserModel = connect.model('User', UserModel)
@@ -141,4 +141,4 @@ class User {
       }
     })
   }
-}module.exports = User
+}

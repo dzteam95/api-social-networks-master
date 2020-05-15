@@ -18,11 +18,10 @@ const Schema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
-  statut: {type: Boolean, default: 1},
-
+  statut: { type: Boolean, default: 1 }
 }, {
-  collection: 'events',
   minimize: false,
+  collection: 'events',
   versionKey: false
 }).set('toJSON', {
   transform: (doc, ret) => {
