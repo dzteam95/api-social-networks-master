@@ -6,18 +6,11 @@ const Schema = new mongoose.Schema({
     ref: 'Event',
     required: true
   },
-  billet_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'billet',
-    required: true,
-    unique: true
-  },
-  quantity: Number,
-  hour: Date,
-  dateCreation: Date,
-  statut: { type: Boolean, default: 1 }
+  name: { type: String, required: true, trim: true },
+  date_creation: { type: Date, default: Date.now, required: true },
+  enable: { type: Boolean, default: 1, required: true }
 }, {
-  collection: 'shoopings',
+  collection: 'shopping_items',
   minimize: false,
   versionKey: false
 }).set('toJSON', {

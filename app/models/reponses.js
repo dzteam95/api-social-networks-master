@@ -1,23 +1,25 @@
 const mongoose = require('mongoose')
 
 const Schema = new mongoose.Schema({
-  event_id: {
+  author_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true
+    ref: 'User'
+    
   },
-  billet_id: {
+  reponse: String,
+  sondage_ref: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'billet',
-    required: true,
-    unique: true
+    ref: 'Sondages'
+    
   },
-  quantity: Number,
-  hour: Date,
-  dateCreation: Date,
-  statut: { type: Boolean, default: 1 }
+  question_ref: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SondageQuestion'
+    
+  },
+  status: {type: Boolean, default: 1}
 }, {
-  collection: 'shoopings',
+  collection: 'Sondages_reponses',
   minimize: false,
   versionKey: false
 }).set('toJSON', {

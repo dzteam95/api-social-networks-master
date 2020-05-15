@@ -1,5 +1,4 @@
 const EventModel = require('../models/events')
-const BilletModel = require('../models/billet')
 const ShoppingsModel = require('../models/shoopings')
 
 /**
@@ -11,15 +10,14 @@ module.exports = class Shopping {
   constructor (app, connect) {
     this.app = app
     this.EventModel = connect.model('Event', EventModel)
-    this.BilletModel = connect.model('billet', BilletModel)
     this.ShoppingsModel = connect.model('Shoopings', ShoppingsModel)
     this.createShoppingList()
     this.deleteShoppingList()
-    this.createBillet()
-    this.getBillet()
+    this.createArticl()
+    this.getArticl()
     this.getShopping()
-    this.updateBillet()
-    this.deleteBillet()
+    this.updateArticl()
+    this.deleteArticl()
     this.defineShopping()
     this.removeShopping()
   }
@@ -32,7 +30,7 @@ module.exports = class Shopping {
   createShoppingList () {
     this.app.post('/shoppings/create', (req, res) => {
       try {
-        this.EventModel.findByIdAndUpdate(req.body.event_id, {'shopping_list': true}).populate('managers, members').then(event => {
+        this.EventModel.findByIdAndUpdate(req.body.event_id, {'shopping_list': true}).populate('admins, members').then(event => {
           if (event) {
             res.status(201).json(
               {
@@ -69,21 +67,21 @@ module.exports = class Shopping {
   }
   
   /**
-   * Créer un item dans une shopping list
-   * @Endpoint : /shoppings/items/create
+   * Créer un articl dans une shopping list
+   * @Endpoint : /shoppings/articl/create
    * @Method : POST
    */
   
-  createBillet () {
-    this.app.post('/Billet/items/create', (req, res) => {
+  createArticl () {
+    this.app.post('/shoppings/Articl/create', (req, res) => {
       try {
-        const shoppingItemsModel = new this.ShoppingItemsModel(req.body)
+        const ShoppingArticlModel = new this.ShoppingArticlModel(req.body)
         this.EventModel.findById(req.body.event_id, function (res, event) {
           if (event) {
-            shoppingItemsModel.save().then(items => {
+            ShoppingArticlModel.save().then(articl => {
               res.status(201).json(
                 {
-                  items: items
+                  articl: articl
                 }
               )
             }).catch(res => {
@@ -106,7 +104,7 @@ module.exports = class Shopping {
               }
             )
           }
-        }).populate('managers, members')
+        }).populate('admins, members')
       } catch (err) {
         res.status(500).json({
           code: 500,
@@ -117,20 +115,20 @@ module.exports = class Shopping {
   }
   
   /**
-   * Récupérer les items d'une shopping list
-   * @Endpoint : /shoppings/{id}/items
+   * Récupérer les articls d'une shopping list
+   * @Endpoint : /shoppings/{id}/articl
    * @Method : GET
    */
   
-  getBillet () {
-    this.app.get('/shoppings/:id/items', (req, res) => {
+  getArticl () {
+    this.app.get('/shoppings/:id/articl', (req, res) => {
       try {
-        this.EventModel.findById(req.params.id).populate('managers, members').then(event => {
+        this.EventModel.findById(req.params.id).populate('admins, members').then(event => {
           if (event) {
-            this.ShoppingItemsModel.find({'event_id': req.params.id}).populate('event_id').then(shoppingList => {
+            this.shoppingArticlModel.find({'event_id': req.params.id}).populate('event_id').then(shoppingArticl => {
               res.status(200).json(
                 {
-                  shoppingList: shoppingList
+                  shoppingArticl: shoppingArticl
                 }
               )
             })
@@ -164,20 +162,20 @@ module.exports = class Shopping {
   }
   
   /**
-   * Récupérer les items réservés d'une shopping list
-   * @Endpoint : /shoppings/{id}/items/shoppers
+   * Récupérer les articls réservés d'une shopping list
+   * @Endpoint : /shoppings/{id}/articl/shoppings
    * @Method : GET
    */
   
   getShopping () {
-    this.app.get('/shoppings/:id/items/shoppings', (req, res) => {
+    this.app.get('/shoppings/:id/articl/shoppings', (req, res) => {
       try {
-        this.EventModel.findById(req.params.id).populate('managers, members').then(event => {
+        this.EventModel.findById(req.params.id).populate('admins, members').then(event => {
           if (event) {
-            this.ShoppersModel.find({'event_id': req.params.id, 'enable': true}).populate('event_id').then(shoppingList => {
+            this.ShoppingsModel.find({'event_id': req.params.id, 'status': true}).populate('event_id').then(shoppingArticl => {
               res.status(200).json(
                 {
-                  shoppingList: shoppingList
+                  shoppingArticl: shoppingArticl
                 }
               )
             })
@@ -211,19 +209,19 @@ module.exports = class Shopping {
   }
   
   /**
-   * Editer un billet d'une shopping list
-   * @Endpoint : /billet/{id}/update
+   * Editer un articl d'une shopping list
+   * @Endpoint : /articl/{id}/update
    * @Method : PUT
    */
   
-  updateBillet () {
-    this.app.put('/billet/:id/update', (req, res) => {
+  updateArticl () {
+    this.app.put('/articl/:id/update', (req, res) => {
       try {
-        this.ShoppingItemsModel.findByIdAndUpdate(req.params.id, req.body).then(item => {
-          if (item) {
+        this.ShoppingArticlModel.findByIdAndUpdate(req.params.id, req.body).then(articl => {
+          if (articl) {
             res.status(201).json(
               {
-                item: item
+                articl: articl
               }
             )
           } else {
@@ -256,16 +254,16 @@ module.exports = class Shopping {
   }
   
   /**
-   * Supprimer un billet d'une shopping list
-   * @Endpoint : /billet/{id}/delete
+   * Supprimer un articl d'une shopping list
+   * @Endpoint : /articl/{id}/delete
    * @Method : DELETE
    */
   
-  deleteBillet () {
-    this.app.delete('/billet/:id/delete', (req, res) => {
+  deleteArticl () {
+    this.app.delete('/articl/:id/delete', (req, res) => {
       try {
-        this.ShoppingItemsModel.findByIdAndDelete(req.params.id).then(item => {
-          if (item) {
+        this.ShoppingArticlModel.findByIdAndDelete(req.params.id).then(articl => {
+          if (articl) {
             res.status(200).json(
               {
                 success: {
@@ -311,7 +309,7 @@ module.exports = class Shopping {
   deleteShoppingList () {
     this.app.post('/shoppings/delete', (req, res) => {
       try {
-        this.EventModel.findByIdAndUpdate(req.body.event_id, {'shopping_list': false}).populate('managers, members').then(event => {
+        this.EventModel.findByIdAndUpdate(req.body.event_id, {'shopping_list': false}).populate('admins, members').then(event => {
           if (event) {
             res.status(201).json(
               {
@@ -348,21 +346,21 @@ module.exports = class Shopping {
   }
   
   /**
-   * Définir un billet sur un utilisateur (le bloque)
-   * @Endpoint : /billet/{id}/shoppings/define/{user_id}
+   * Définir un articl sur un utilisateur
+   * @Endpoint : /articl/{id}/shoppings/define/{user_id}
    * @Method : POST
    */
   
   defineShopping () {
-    this.app.post('/billet/:id/shoppings/define/:user_id', (req, res) => {
+    this.app.post('/articl/:id/shoppings/define/:user_id', (req, res) => {
       try {
-        const shoppersModel = new this.ShoppersModel(req.body)
-        this.ShoppingItemsModel.findById(req.params.id, function (res, item) {
-          if (item) {
-            shoppersModel.save().then(shopperItem => {
+        const ShoppingsModel = new this.ShoppingsModel(req.body)
+        this.ShoppingArticlModel.findById(req.params.id, function (res, articl) {
+          if (articl) {
+            ShoppingsModel.save().then(shoppingArticl => {
               res.status(201).json(
                 {
-                  shopperItem: shopperItem
+                  shoppingArticl: shoppingArticl
                 }
               )
             }).catch(res => {
@@ -380,7 +378,7 @@ module.exports = class Shopping {
               {
                 error: {
                   status: 400,
-                  message: 'Item doesnt exist'
+                  message: 'Articl doesnt exist'
                 }
               }
             )
@@ -396,18 +394,18 @@ module.exports = class Shopping {
   }
   
   /**
-   * Supprime un utilisateur sur un item d'une shopping list
-   * @Endpoint : /billet/{id}/shoppings/remove
+   * Supprime un utilisateur sur un article d'une shopping list
+   * @Endpoint : /articl/{id}/shoppings/remove
    * @Method : POST
    */
   removeShopping () {
-    this.app.post('/billet/:id/shoppings/remove', (req, res) => {
+    this.app.post('/articl/:id/shoppings/remove', (req, res) => {
       try {
-        this.ShoppersModel.deleteOne({'item_id': req.params.id}).then(shopperItem => {
-          if (shopperItem) {
+        this.ShoppingsModel.deleteOne({'articl_id': req.params.id}).then(shoppingArticl => {
+          if (shoppingArticl) {
             res.status(201).json(
               {
-                shopperItem: shopperItem
+                shoppingArticl: shoppingArticl
               }
             )
           } else {

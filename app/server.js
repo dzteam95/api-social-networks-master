@@ -19,7 +19,8 @@ class Server {
    * @return {Object} connect
    */
   dbConnect () {
-    const host = 'mongodb://localhost:27017/social-networks'
+    const host = 'mongodb+srv://Nabil:<bejaia954>@cluster0-sfcbp.gcp.mongodb.net/test?retryWrites=true&w=majority'
+
     const connect = mongoose.createConnection(host)
 
     connect.on('error', (err) => {
@@ -59,17 +60,18 @@ class Server {
    * Routes
    */
   routes () {
-    new routes.User(this.app, this.connect)
+    new routes.Album(this.app, this.connect)
+    new routes.Comment(this.app, this.connect)
+    new routes.Covoiturage(this.app, this.connect)
+    new routes.Discussion(this.app, this.connect)
     new routes.Event(this.app, this.connect)
     new routes.Group(this.app, this.connect)
-    new routes.Album(this.app, this.connect)
-    new routes.Discussion(this.app, this.connect)
     new routes.Invitation(this.app, this.connect)
     new routes.Message(this.app, this.connect)
-    new routes.Shoppings(this.app, this.connect)
     new routes.Sondages(this.app, this.connect)
-    new routes.Comment(this.app, this.connect)
-  
+    new routes.Shoppings(this.app, this.connect)
+    new routes.User(this.app, this.connect)
+    
     this.app.use((req, res) => {
       res.status(404).json({
         code: 404,

@@ -3,21 +3,20 @@ const mongoose = require('mongoose')
 const Schema = new mongoose.Schema({
   event_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true
+    ref: 'Event'
   },
-  billet_id: {
+  ticket_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'billet',
-    required: true,
-    unique: true
+    ref: 'Billet'
   },
-  quantity: Number,
-  hour: Date,
-  dateCreation: Date,
-  statut: { type: Boolean, default: 1 }
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  date_creation: Date,
+  status: { type: Boolean, default: 1 }
 }, {
-  collection: 'shoopings',
+  collection: 'billet_vendu',
   minimize: false,
   versionKey: false
 }).set('toJSON', {

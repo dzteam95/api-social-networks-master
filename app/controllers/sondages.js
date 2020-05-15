@@ -1,7 +1,7 @@
 const sondagesModel = require('../models/sondages')
-/**const sondagesQuestionModel = require('../models/sondages_questions')
-const sondagesQuestionAnswerModel = require('../models/sondages_questions_answers')
-const sondagesAnswerModel = require('../models/sondages_answers')*/
+const sondagesQuestionModel = require('../models/sondages_questions')
+const sondagesQuestionAResponsesModel = require('../models/sondages_questions_responses')
+const sondagesResponsesModel = require('../models/sondages_responses')
 const EventModel = require('../models/events')
 
 /**
@@ -14,8 +14,8 @@ class Sondages {
     this.app = app
     this.sondagesModel = connect.model('sondage', sondagesModel)
     this.sondagesQuestionModel = connect.model('sondageQuestion', sondagesQuestionModel)
-    this.sondagesQuestionAnswerModel = connect.model('sondageQuestionAnswer', sondagesQuestionAnswerModel)
-    this.sondagesAnswerModel = connect.model('sondageAnswer', sondagesAnswerModel)
+    this.sondagesQuestionAResponsesModel = connect.model('sondageQuestionAnswer', sondagesQuestionAResponsesModel)
+    this.sondagesResponsesModel = connect.model('sondageResponse', sondagesResponsesModel)
     this.EventModel = connect.model('Event', EventModel)
     this.getSondages()
     this.getSondage()
@@ -24,9 +24,9 @@ class Sondages {
     this.deleteSondage()
     this.deleteSondageQuestion()
     this.getSondageQuestions()
-    this.deleteSondageQuestionAnswer()
+    this.deleteSondageQuestionResponse()
     this.getSondageQuestionsAnswers()
-    this.createAnswer()
+    this.createResponse()
   }
   
   /**
@@ -110,10 +110,10 @@ class Sondages {
       try {
         this.sondagesModel.findById(req.params.id).populate('author_id').then(sondage => {
           if (sondage) {
-            this.sondagesQuestionModel.find({'sondage_ref': req.params.id}).populate('sondage_ref').then(SondageQuesions => {
+            this.sondagesQuestionModel.find({'sondage_ref': req.params.id}).populate('sondage_ref').then(SondageQuestion => {
               res.status(200).json(
                 {
-                  SondageQuesions: SondageQuesions
+                  SondageQuestion: SondageQuestion
                 }
               )
             })
@@ -148,18 +148,18 @@ class Sondages {
   
   /**
    * Récupérer les questions d'un sondage
-   * @Endpoint : /sondage/{id}/questions/{question_id}/answers
+   * @Endpoint : /sondage/{id}/questions/{question_id}/reponses
    * @Method : GET
    */
   getSondageQuestionsAnswers () {
-    this.app.get('/sondage/:id/questions/:question_id/answers', (req, res) => {
+    this.app.get('/sondage/:id/questions/:question_id/responses', (req, res) => {
       try {
         this.sondagesQuestionModel.findById(req.params.questionId).populate('sondage_ref').then(sondage => {
           if (sondage) {
-            this.sondagesQuestionAnswerModel.find({'question_ref': req.params.questionId}).populate('sondage_ref, question_ref').then(questionAnswers => {
+            this.sondagesQuestionAResponsesModel.find({'question_ref': req.params.questionId}).populate('sondage_ref, question_ref').then(questionReponses => {
               res.status(200).json(
                 {
-                  questionAnswers: questionAnswers
+                  questionReponses: questionReponses
                 }
               )
             })
@@ -202,7 +202,7 @@ class Sondages {
     this.app.post('/sondage/create', (req, res) => {
       try {
         const SondagesModel = new this.SondagesModel(req.body)
-        this.EventModel.findOne({ managers: {'$in': [req.body.author_id]} }, function (res, event) {
+        this.EventModel.findOne({ admins: {'$in': [req.body.author_id]} }, function (res, event) {
           if (event) {
             SondagesModel.save().then(sondage => {
               res.status(201).json(
@@ -230,7 +230,7 @@ class Sondages {
               }
             )
           }
-        }).populate('managers, members')
+        }).populate('admins, members')
       } catch (err) {
         res.status(500).json({
           code: 500,
@@ -294,13 +294,13 @@ class Sondages {
    * @Method : POST
    */
   
-  deleteSondageQuestionAnswer () {
+  deleteSondageQuestionResponse () {
     this.app.post('/sondage/:id/questions/:question_id/answer/create', (req, res) => {
       try {
-        const SondagesQuestionAnswerModel = new this.SondagesQuestionAnswerModel(req.body)
+        const sondagesQuestionResponsesModel = new this.SondagesQuestionResponsesModel(req.body)
         this.SondagesQuestionModel.findById(req.params.question_id, function (res, sondageQuestion) {
           if (sondageQuestion) {
-            SondagesQuestionAnswerModel.save().then(sondageQuestion => {
+            sondagesQuestionResponsesModel.save().then(sondageQuestion => {
               res.status(201).json(
                 {
                   sondageQuestion: sondageQuestion
@@ -338,26 +338,26 @@ class Sondages {
   
   /**
    * Créer une réponse a une question dans un sondage
-   * @Endpoint : /polls/{id}/questions/{question_id}/answer/define
+   * @Endpoint : /sondages/{id}/questions/{question_id}/responses/define
    * @Method : POST
    */
-  createAnswer () {
-    this.app.post('/sondages/:id/questions/:question_id/answer/define', (req, res) => {
+  createResponse () {
+    this.app.post('/sondages/:id/questions/:question_id/responses/define', (req, res) => {
       try {
         const SondagesModel = new this.SondagesModel(req.body)
         const SondagesQuestionModel = new this.SondagesQuestionModel(req.body)
-        const SondagesQuestionAnswerModel = new this.SondagesQuestionAnswerModel(req.body)
-        const SondagesAnswerModel = new this.SondagesAnswerModel(req.body)
+        const SondagesQuestionResponsesModel = new this.SondagesQuestionResponsesModel(req.body)
+        const SondagesResponseModel = new this.SondagesResponseModel(req.body)
         SondagesModel.findById(req.params.id, function (res, sondage) {
           if (sondage) {
             SondagesQuestionModel.findById(req.params.question_id, function (res, question) {
               if (question) {
-                SondagesQuestionAnswerModel.findOne({'content': req.body.questions, 'sondage_ref': req.params.id, 'question_ref': req.params.questionId}, function (res, question) {
+                SondagesQuestionResponsesModel.findOne({'content': req.body.questions, 'sondage_ref': req.params.id, 'question_ref': req.params.questionId}, function (res, question) {
                   if (question) {
-                    SondagesAnswerModel.save().then(question => {
+                    SondagesResponseModel.save().then(response => {
                       res.status(201).json(
                         {
-                          question: question
+                          response: response
                         }
                       )
                     }).catch(res => {

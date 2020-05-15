@@ -3,14 +3,15 @@ const mongoose = require('mongoose')
 const Schema = new mongoose.Schema({
   event_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true
+    ref: 'Event'
   },
-  name: { type: String, required: true, trim: true },
-  date_creation: { type: Date, default: Date.now, required: true },
-  enable: { type: Boolean, default: 1, required: true }
+  name: String,
+  price: Number,
+  quantity: Number,
+  date_creation: Date,
+  status: {type: Boolean, default: 1}
 }, {
-  collection: 'billet',
+  collection: 'billet_type',
   minimize: false,
   versionKey: false
 }).set('toJSON', {
