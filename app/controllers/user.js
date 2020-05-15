@@ -40,7 +40,7 @@ module.exports = class User {
    * Create
    */
   create () {
-    this.app.post('/user/create', (req, res) => {
+    this.app.post('/user/create/', (req, res) => {
       try {
         const userModel = this.UserModel(req.body)
         this.UserModel.find({ email: req.body.email }).then(user => {

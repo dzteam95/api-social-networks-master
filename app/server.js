@@ -82,13 +82,14 @@ class Server {
   /**
    * Run
    */
+  
   run () {
     try {
       this.connect = this.dbConnect()
       this.dbConnect()
       this.middleware()
       this.routes()
-      this.app.listen(3000)
+      this.app.listen(4000)
     } catch (err) {
       console.log(`[ERROR] Server -> ${err}`)
     }

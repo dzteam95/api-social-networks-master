@@ -27,7 +27,8 @@
     "express": "4.16.3",
     "helmet": "3.12.1",
     "mongoose": "5.1.4",
-    "node-validator": "0.1.27"
+    "node-validator": "0.1.27",
+    "nodemon": "^2.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
