@@ -19,7 +19,7 @@ class Server {
    * @return {Object} connect
    */
   dbConnect () {
-    const host = 'mongodb+srv://Nabil:<bejaia954>@cluster0-sfcbp.gcp.mongodb.net/test?retryWrites=true&w=majority'
+    const host = 'mongodb+srv://Nabil:Bejaia954@cluster0-sfcbp.gcp.mongodb.net/test?retryWrites=true&w=majority'
 
     const connect = mongoose.createConnection(host)
 
@@ -62,7 +62,6 @@ class Server {
   routes () {
     new routes.Album(this.app, this.connect)
     new routes.Comment(this.app, this.connect)
-    new routes.Covoiturage(this.app, this.connect)
     new routes.Discussion(this.app, this.connect)
     new routes.Event(this.app, this.connect)
     new routes.Group(this.app, this.connect)

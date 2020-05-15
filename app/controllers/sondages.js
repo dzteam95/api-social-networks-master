@@ -1,7 +1,7 @@
 const sondagesModel = require('../models/sondages')
-const sondagesQuestionModel = require('../models/sondages_questions')
-const sondagesQuestionAResponsesModel = require('../models/sondages_questions_responses')
-const sondagesResponsesModel = require('../models/sondages_responses')
+const sondagesQuestionModel = require('../models/questions')
+const sondagesQuestionResponsesModel = require('../models/questions_reponses')
+const sondagesResponsesModel = require('../models/reponses')
 const EventModel = require('../models/events')
 
 /**
@@ -14,7 +14,7 @@ class Sondages {
     this.app = app
     this.sondagesModel = connect.model('sondage', sondagesModel)
     this.sondagesQuestionModel = connect.model('sondageQuestion', sondagesQuestionModel)
-    this.sondagesQuestionAResponsesModel = connect.model('sondageQuestionAnswer', sondagesQuestionAResponsesModel)
+    this.sondagesQuestionResponsesModel = connect.model('sondageQuestionResponse', sondagesQuestionResponsesModel)
     this.sondagesResponsesModel = connect.model('sondageResponse', sondagesResponsesModel)
     this.EventModel = connect.model('Event', EventModel)
     this.getSondages()
