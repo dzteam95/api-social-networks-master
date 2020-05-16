@@ -8,7 +8,7 @@ const Schema = new mongoose.Schema({
   Date_de_fin: String,
   Lieu: String,
   prive: {type: Boolean, default: 1},
-  managers: [{
+  admins: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true

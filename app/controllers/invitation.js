@@ -22,7 +22,7 @@ module.exports = class Invitation {
    * @Method : POST
    */
   createInvitation () {
-    this.app.post('/invitations/create', (req, res) => {
+    this.app.post('/invitations/create/', (req, res) => {
       try {
         const invitationModel = new this.InvitationModel(req.body)
         if (req.body.type && (req.body.type === 'group' || req.body.type === 'event')) {

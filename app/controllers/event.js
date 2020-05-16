@@ -20,7 +20,7 @@ module.exports = class Event {
    * Create
    */
   createEvent () {
-    this.app.post('/events/create', (req, res) => {
+    this.app.post('/events/create/', (req, res) => {
       try {
         const eventModel = this.EventModel(req.body)
         eventModel.save().then(event => {
@@ -49,11 +49,11 @@ module.exports = class Event {
     this.app.put('/events/:id/join', (req, res) => {
       try {
         this.EventModel.findById(req.params.id).populate('managers, members').then(event => {
-          const _managers = event.managers
+          const _admins = event.admins
           const _members = event.members
           const _userId = (req.body.user_id) ? req.body.user_id : false
-          const _role = (req.body.manager) ? 'manager' : 'member'
-          if (_managers.includes(_userId) || _members.includes(_userId)) {
+          const _role = (req.body.admin) ? 'manager' : 'member'
+          if (_admins.includes(_userId) || _members.includes(_userId)) {
             res.status(400).json(
               {
                 error: {
@@ -67,11 +67,11 @@ module.exports = class Event {
             if (_role === 'member') {
               _members.push(_userId)
               data = {members: _members}
-            } else if (_role === 'manager') {
-              _managers.push(_userId)
-              data = {managers: _managers}
+            } else if (_role === 'admin') {
+              _admins.push(_userId)
+              data = {managers: _admins}
             }
-            this.EventModel.findByIdAndUpdate(req.params.id, data).populate('managers, members').then(event => {
+            this.EventModel.findByIdAndUpdate(req.params.id, data).populate('admins, members').then(event => {
               res.status(201).json(
                 {
                   event: event
@@ -114,15 +114,15 @@ module.exports = class Event {
    * @Method : GET
    */
   getEvents () {
-    this.app.get('/events', (req, res) => {
+    this.app.get('/events/', (req, res) => {
       try {
-        this.EventModel.find({}, function (res, events) {
+        this.EventModel.find({}, function (err, events) {
           res.status(200).json(
             {
               events: events
             }
           )
-        }).populate('managers, members')
+        }).populate('admins, admins')
       } catch (err) {
         res.status(500).json({
           code: 500,
@@ -139,7 +139,7 @@ module.exports = class Event {
   getEvent () {
     this.app.get('/events/:id', (req, res) => {
       try {
-        this.EventModel.findById(req.params.id).populate('managers, members').then(event => {
+        this.EventModel.findById(req.params.id).populate('admins, members').then(event => {
           if (event) {
             res.status(200).json(
               {
@@ -181,9 +181,9 @@ module.exports = class Event {
    * @Method : PUT
    */
   updateEvent () {
-    this.app.put('/event/:id/update', (req, res) => {
+    this.app.put('/events/:id/update', (req, res) => {
       try {
-        this.EventModel.findByIdAndUpdate(req.params.id, req.body).populate('managers, members').then(event => {
+        this.EventModel.findByIdAndUpdate(req.params.id, req.body).populate('admins, admins').then(event => {
           if (event) {
             res.status(201).json(
               {

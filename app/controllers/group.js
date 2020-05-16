@@ -23,10 +23,10 @@ module.exports = class Group {
    */
 
   createGroup () {
-    this.app.post('/groups/create', (req, res) => {
+    this.app.post('/groups/create/', (req, res) => {
       try {
         const GroupModel = new this.GroupModel(req.body)
-        if (req.body.managers && req.body.managers[0]) {
+        if (req.body.admins && req.body.admins[0]) {
           if (req.body.group_type && (req.body.group_type === 'public' || req.body.group_type === 'private' || req.body.group_type === 'secret')) {
             GroupModel.save().then(group => {
               res.status(201).json(

@@ -27,13 +27,15 @@ module.exports = class Album {
 
   /**
    * Create
+   *  @Endpoint : /album
+   @Method : POST
    */
 
   createAlbum () {
-    this.app.post('/albums/create', (req, res) => {
+    this.app.post('/albums/create/', (req, res) => {
       try {
         const albumModel = this.AlbumModel(req.body)
-        this.AlbumModel.findOne({ title: req.body.title }, function (res, album) {
+        this.AlbumModel.findOne({}, function (err, album) {
           if (album) {
             res.status(400).json(
               {
@@ -78,9 +80,9 @@ module.exports = class Album {
    */
 
   getAlbums () {
-    this.app.get('/albums', (req, res) => {
+    this.app.get('/albums/', (req, res) => {
       try {
-        this.AlbumModel.find({}, function (res, albums) {
+        this.AlbumModel.find({}, function (err, albums) {
           res.status(200).json(
             {
               albums: albums,
@@ -233,33 +235,45 @@ module.exports = class Album {
      * Créer une image dans un album
      */
   createAlbumPicture () {
-    this.app.post('/albums/:id/pictures/create', (req, res) => {
-      try {
-        const albumPicturesModel = new this.AlbumPicturesModel(req.body)
-
-        albumPicturesModel.save().then(album => {
-          res.status(201).json(
-            {
-              album: album
-            }
-          )
-        }).catch(res => {
-          res.status(400).json(
-            {
-              error: {
-                status: 400,
-                message: 'error'
+        this.app.post('/albums/:id/pictures/create/', (req, res) => {
+          try {
+            const albumPicturesModel = new this.AlbumPicturesModel(req.body)
+            this.AlbumPicturesModel.findOne({}, function (res, album) {
+              if (album) {
+                res.status(400).json(
+                  {
+                    error: {
+                      status: 400,
+                      message: 'picture already exist'
+                    }
+                  }
+                )
+              } else {
+                albumPicturesModel.save().then(album => {
+                  res.status(201).json(
+                    {
+                      album: album
+                    }
+                  )
+                }).catch(res => {
+                  res.status(400).json(
+                    {
+                      error: {
+                        status: 400,
+                        message: 'error'
+                      }
+                    }
+                  )
+                })
               }
-            }
-          )
+            })
+          } catch (err) {
+            res.status(500).json({
+              code: 500,
+              message: 'Internal Server Error'
+            })
+          }
         })
-      } catch (err) {
-        res.status(500).json({
-          code: 500,
-          message: 'Internal Server Error'
-        })
-      }
-    })
   }
 
   /**
