@@ -2,12 +2,12 @@
   "name": "@so-xzen/api-social-networks",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "build": "yarn install && eslint ./app/* ./test/* index.js && yarn start",
-    "start": "eslint ./app/* ./test/* index.js && node index.js",
+    "build": "yarn install && eslint ./app/* ./test/* app.js && yarn start",
+    "start": "eslint ./app/* ./test/* app.js && node app.js",
     "test": "mocha",
-    "lint": "eslint ./app/* ./test/* index.js"
+    "lint": "eslint ./app/* ./test/* app.js"
   },
   "repository": {
     "type": "git",

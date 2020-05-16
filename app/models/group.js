@@ -4,9 +4,8 @@ const Schema = new mongoose.Schema({
 
   name: String,
   Description: String,
-  Aurorisation_creation: Boolean,
-  Aurorisation_publication: Boolean,
-  managers: [{
+  date_creation: Date,
+  admins: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -16,6 +15,10 @@ const Schema = new mongoose.Schema({
     ref: 'User',
     required: true
   }],
+  permissions: {
+    member_publish: {type: Boolean, default: true, required: true},
+    member_create_event: {type: Boolean, default: false, required: true}
+  },
   icone_group: {
     type: String,
     default: 'https://pbs.twimg.com/profile_images/1126137112825335808/L5WvNz8W_400x400.jpg'
@@ -24,7 +27,7 @@ const Schema = new mongoose.Schema({
     type: String,
     default: 'https://pbs.twimg.com/profile_images/1126137112825335808/L5WvNz8W_400x400.jpg'
   },
-  statut: Boolean
+  status: Boolean
 }, {
   collection: 'groups',
   minimize: false,

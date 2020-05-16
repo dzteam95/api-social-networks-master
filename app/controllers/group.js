@@ -34,8 +34,8 @@ module.exports = class Group {
                   group: group
                 }
               )
-            }).catch(res => {
-              res.status(400).json(
+            }).catch(err => {
+              err.status(400).json(
                 {
                   error: {
                     status: 400,
@@ -116,8 +116,8 @@ module.exports = class Group {
                         invitation: invitation
                       }
                     )
-                  }).catch(res => {
-                    res.status(400).json(
+                  }).catch(err => {
+                    err.status(400).json(
                       {
                         error: {
                           status: 400,
@@ -130,8 +130,8 @@ module.exports = class Group {
               }).populate('id_receiver')
             }
           })
-          .catch(res => {
-            res.status(400).json(
+          .catch(err => {
+            err.status(400).json(
               {
                 error: {
                   status: 400,

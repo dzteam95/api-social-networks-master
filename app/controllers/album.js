@@ -12,7 +12,7 @@ module.exports = class Album {
     this.AlbumModel = connect.model('Album', AlbumModel)
     this.AlbumPicturesModel = connect.model('AlbumPictures', AlbumPicturesModel)
     this.CommentModel = connect.model('Comment', CommentModel)
-
+    
     this.createAlbum()
     this.getAlbums()
     this.getAlbum()
@@ -24,18 +24,18 @@ module.exports = class Album {
     this.getAlbumPictures()
     this.getAlbumPicturesComments()
   }
-
+  
   /**
    * Create
    *  @Endpoint : /album
    @Method : POST
    */
-
+  
   createAlbum () {
     this.app.post('/albums/create/', (req, res) => {
       try {
         const albumModel = this.AlbumModel(req.body)
-        this.AlbumModel.findOne({}, function (err, album) {
+        this.AlbumModel.findOne({}, function (res, album) {
           if (album) {
             res.status(400).json(
               {
@@ -72,17 +72,17 @@ module.exports = class Album {
       }
     })
   }
-
+  
   /**
    * Récupérer les données des albums
-    @Endpoint : /album
-    @Method : GET
+   @Endpoint : /album
+   @Method : GET
    */
-
+  
   getAlbums () {
     this.app.get('/albums/', (req, res) => {
       try {
-        this.AlbumModel.find({}, function (err, albums) {
+        this.AlbumModel.find({}, function (res, albums) {
           res.status(200).json(
             {
               albums: albums,
@@ -141,7 +141,7 @@ module.exports = class Album {
       }
     })
   }
-
+  
   /**
    * Update les données d'un album
    * @Endpoint : /album/{id}/update
@@ -185,10 +185,10 @@ module.exports = class Album {
       }
     })
   }
-
+  
   /**
-     * Supprimer un album
-     */
+   * Supprimer un album
+   */
   deleteAlbum () {
     this.app.delete('/albums/:id/delete', (req, res) => {
       try {
@@ -230,56 +230,56 @@ module.exports = class Album {
       }
     })
   }
-
+  
   /**
-     * Créer une image dans un album
-     */
+   * Créer une image dans un album
+   */
   createAlbumPicture () {
-        this.app.post('/albums/:id/pictures/create/', (req, res) => {
-          try {
-            const albumPicturesModel = new this.AlbumPicturesModel(req.body)
-            this.AlbumPicturesModel.findOne({}, function (res, album) {
-              if (album) {
-                res.status(400).json(
-                  {
-                    error: {
-                      status: 400,
-                      message: 'picture already exist'
-                    }
-                  }
-                )
-              } else {
-                albumPicturesModel.save().then(album => {
-                  res.status(201).json(
-                    {
-                      album: album
-                    }
-                  )
-                }).catch(res => {
-                  res.status(400).json(
-                    {
-                      error: {
-                        status: 400,
-                        message: 'error'
-                      }
-                    }
-                  )
-                })
+    this.app.post('/albums/:id/pictures/create/', (req, res) => {
+      try {
+        const albumPicturesModel = new this.AlbumPicturesModel(req.body)
+        this.AlbumPicturesModel.findOne({}, function (res, album) {
+          if (album) {
+            res.status(400).json(
+              {
+                error: {
+                  status: 400,
+                  message: 'picture already exist'
+                }
               }
-            })
-          } catch (err) {
-            res.status(500).json({
-              code: 500,
-              message: 'Internal Server Error'
+            )
+          } else {
+            albumPicturesModel.save().then(album => {
+              res.status(201).json(
+                {
+                  album: album
+                }
+              )
+            }).catch(res => {
+              res.status(400).json(
+                {
+                  error: {
+                    status: 400,
+                    message: 'error'
+                  }
+                }
+              )
             })
           }
         })
+      } catch (err) {
+        res.status(500).json({
+          code: 500,
+          message: 'Internal Server Error'
+        })
+      }
+    })
   }
-
+  
   /**
    * Récupérer les images d'un album
    */
-
+  
   getAlbumPictures () {
     this.app.get('/albums/:id/pictures', (req, res) => {
       try {
@@ -320,10 +320,10 @@ module.exports = class Album {
       }
     })
   }
-
+  
   /**
- * Récupérer les commentaires d'une image dans un album
- */
+   * Récupérer les commentaires d'une image dans un album
+   */
   getAlbumPicturesComments () {
     this.app.get('/albums/:id/pictures/:pic_id/comments', (req, res) => {
       try {
@@ -365,8 +365,8 @@ module.exports = class Album {
     })
   }
   /**
-     * Editer une image d'un album
-     */
+   * Editer une image d'un album
+   */
   updateAlbumPicture () {
     this.app.put('/albums/:id/pictures/update', (req, res) => {
       try {
@@ -406,8 +406,8 @@ module.exports = class Album {
     })
   }
   /**
-     * Supprimer une image d'un album
-     */
+   * Supprimer une image d'un album
+   */
   deleteAlbumPicture () {
     this.app.delete('/albums/:id/pictures/delete', (req, res) => {
       try {

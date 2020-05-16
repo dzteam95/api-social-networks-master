@@ -116,7 +116,7 @@ module.exports = class Event {
   getEvents () {
     this.app.get('/events/', (req, res) => {
       try {
-        this.EventModel.find({}, function (err, events) {
+        this.EventModel.find({}, function (res, events) {
           res.status(200).json(
             {
               events: events
