@@ -40,31 +40,45 @@ https://documenter.getpostman.com/view/11431772/SzmmTE6s?version=latest ( en cou
 Tables Mongodb
 Voici toutes les tables utilisées pour ce projet
 
-Table
-albums
-albums_pictures
-comments
-discussions
-events
-groups
-invitations
-messages
-Sondages_questions
-Sondages_reponses
-Sondages_questions_reponses
-shoopings
-shopping_items
-billet_vendu
-billet_type
-users
-Codes d'état
+Table:
+
+albums, 
+albums_pictures, 
+comments, 
+discussions, 
+events ,
+groups ,
+invitations , 
+messages ,
+Sondages_questions ,
+Sondages_reponses ,
+Sondages_questions_reponses ,
+shoopings ,
+shopping_items ,
+billet_vendu ,
+billet_type ,
+users ,
+
+
+Codes d'état :
 
 Cette API renvoie les codes d'état suivants:
 
 Code d'état	La description
-200	OK
-201	CREATED
-400	BAD REQUEST
-404	NOT FOUND
-500	INTERNAL SERVER ERROR
+
+200	
+OK
+
+201	
+CREATED
+
+400	
+BAD REQUEST
+
+404	
+NOT FOUND
+
+500	
+INTERNAL SERVER ERROR
+
 URL de base: http://localhost:4000/
