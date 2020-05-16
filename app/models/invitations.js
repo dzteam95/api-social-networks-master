@@ -10,9 +10,9 @@ const Schema = new mongoose.Schema({
     required: true
   },
   id_sender: String,
-  date_begin: Date,
-  date_end: Date,
-  statut: { type: Boolean, default: 1 }
+  date_creation: Date,
+  date_fin: Date,
+  status: { type: Boolean, default: 1 }
 }, {
   collection: 'invitations',
   minimize: false,
